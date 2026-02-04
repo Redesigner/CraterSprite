@@ -10,6 +10,10 @@ size = Vector2(14, 20)
 
 [node name="Player" type="CharacterBody2D" unique_id=2076774000]
 script = ExtResource("1_v58vf")
+_acceleration = 500.0
+_maxSpeed = 100.0
+_maxAirSpeedHorizontal = 150.0
+_jumpTime = 0.1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1924232188]
 position = Vector2(0, -32)

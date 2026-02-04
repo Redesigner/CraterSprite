@@ -9,10 +9,13 @@ namespace CraterSprite
         
         public override void _Ready()
         {
-            InputManager.instance.RegisterCallback("walk_left", strength =>
+            InputManager.instance.RegisterAxisChangedCallback("walk_right", "walk_left", strength =>
             {
                 _character.SetMoveInput(strength);
             }, this);
+            
+            InputManager.instance.RegisterCallback("jump", InputEventType.Pressed, _ => _character.StartJumping(), this);
+            InputManager.instance.RegisterCallback("jump", InputEventType.Released, _ => _character.StopJumping(), this);
         }
     }
 }
