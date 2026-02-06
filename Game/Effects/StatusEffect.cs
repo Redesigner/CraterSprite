@@ -5,6 +5,7 @@ namespace CraterSprite.Effects;
 public enum EffectAccumulator
 {
     None,
+    BaseValueOnly,
     Additive,
     Multiplicative,
     Maximum,

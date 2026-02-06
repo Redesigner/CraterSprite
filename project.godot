@@ -19,10 +19,15 @@ config/icon="res://icon.svg"
 
 InputManager="*uid://cqro5ppmwmevj"
 GameMode="*uid://ds6jeg40nytga"
+ImGuiRoot="*uid://dugmpnsxaagba"
 
 [dotnet]
 
 project/assembly_name="CraterSprite"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/imgui-godot/plugin.cfg")
 
 [input]
 

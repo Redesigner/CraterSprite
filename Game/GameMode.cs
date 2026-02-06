@@ -14,5 +14,6 @@ public partial class GameMode : Node
         instance = this;
 
         statusEffects = ResourceLoader.Load<StatusEffectList>("res://Game/Effects/SL_Effects.tres");
+        ImGuiGodot.ImGuiGD.ToolInit();
     }
 }
