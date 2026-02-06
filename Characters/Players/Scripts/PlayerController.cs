@@ -6,6 +6,7 @@ namespace CraterSprite
     public partial class PlayerController : Node
     {
         [Export] private KinematicCharacter _character;
+        [Export] private ProjectileLauncher _gun;
         
         public override void _Ready()
         {
@@ -19,6 +20,9 @@ namespace CraterSprite
             
             InputManager.instance.RegisterCallback("crouch", InputEventType.Pressed, _ => _character.Crouch(), this);
             InputManager.instance.RegisterCallback("crouch", InputEventType.Released, _ => _character.Uncrouch(), this);
+            
+            
+            InputManager.instance.RegisterCallback("fire", InputEventType.Pressed, _ => _gun.FireProjectile(), this);
         }
     }
 }

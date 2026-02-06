@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" uid="uid://bsfdycg3wydrv" path="res://Characters/Scripts/KinematicCharacter.cs" id="1_v58vf"]
 [ext_resource type="Texture2D" uid="uid://b6ltmkwpn20aw" path="res://Characters/Players/Sprites/Sp_DogBoy_Walking.png" id="2_1fpnh"]
+[ext_resource type="Script" uid="uid://r6asvyfexakk" path="res://Characters/Scripts/ProjectileLauncher.cs" id="2_dhh5l"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://btf2rg88m5jdc" path="res://Characters/Players/Animations/ABT_Player.tres" id="2_v58vf"]
+[ext_resource type="PackedScene" uid="uid://kgj0kkgcwle3" path="res://Props/Projectiles/Projectile.tscn" id="3_570sx"]
 [ext_resource type="Script" uid="uid://bcijaprypmkpb" path="res://Characters/Players/Scripts/PlayerController.cs" id="4_1fpnh"]
 [ext_resource type="Script" uid="uid://b2v40725rdn8b" path="res://Characters/Scripts/ToggleableHitbox.cs" id="4_ht06l"]
 [ext_resource type="Script" uid="uid://c74blvexl5qt5" path="res://Characters/Scripts/CharacterAnimationTree.cs" id="5_7kb7x"]
@@ -108,6 +110,10 @@ _crouchedMaxSpeed = 50.0
 _maxAirSpeedHorizontal = 150.0
 _jumpTime = 0.1
 
+[node name="Gun" type="Node2D" parent="." unique_id=590104627]
+script = ExtResource("2_dhh5l")
+_projectile = ExtResource("3_570sx")
+
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2117321767]
 position = Vector2(0, -32)
 texture = ExtResource("2_1fpnh")
@@ -120,9 +126,10 @@ shape = SubResource("RectangleShape2D_1fpnh")
 [node name="PlayerCamera" type="Camera2D" parent="." unique_id=217051065]
 zoom = Vector2(4, 4)
 
-[node name="Controller" type="Node" parent="." unique_id=505377627 node_paths=PackedStringArray("_character")]
+[node name="Controller" type="Node" parent="." unique_id=505377627 node_paths=PackedStringArray("_character", "_gun")]
 script = ExtResource("4_1fpnh")
 _character = NodePath("..")
+_gun = NodePath("../Gun")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=60656270 node_paths=PackedStringArray("_onHitbox", "_offHitbox")]
 collision_layer = 16

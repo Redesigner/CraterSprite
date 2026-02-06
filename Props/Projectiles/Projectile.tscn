@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://kgj0kkgcwle3"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_o6bxk"]
+
+[node name="Projectile" type="Node2D" unique_id=1015776207]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=949882656]
+position = Vector2(0, 7.6293945e-06)
+scale = Vector2(74.083916, 74.08392)
+mesh = SubResource("SphereMesh_o6bxk")

@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
 namespace CraterSprite
 {
@@ -14,18 +13,18 @@ namespace CraterSprite
 
     public struct InputAxis(string positive, string negative)
     {
-        public string negative = negative;
-        public string positive = positive;
+        public readonly string negative = negative;
+        public readonly string positive = positive;
     }
     
     public partial class InputManager : Node
     {
         public static InputManager instance { get; private set; }
 
-        private SparseEventMap<string, float> _keyPressedEventMap = new();
-        private SparseEventMap<string, float> _keyReleasedEventMap = new();
-        private SparseEventMap<string, float> _keyChangedEventMap = new();
-        private SparseEventMap<InputAxis, float> _axisChangedEventMap = new();
+        private readonly SparseEventMap<string, float> _keyPressedEventMap = new();
+        private readonly SparseEventMap<string, float> _keyReleasedEventMap = new();
+        private readonly SparseEventMap<string, float> _keyChangedEventMap = new();
+        private readonly SparseEventMap<InputAxis, float> _axisChangedEventMap = new();
 
         public override void _Ready()
         {
