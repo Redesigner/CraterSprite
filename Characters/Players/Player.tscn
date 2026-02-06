@@ -109,8 +109,12 @@ script = ExtResource("1_v58vf")
 _acceleration = 500.0
 _maxSpeed = 100.0
 _crouchedMaxSpeed = 50.0
+_friction = 500.0
 _maxAirSpeedHorizontal = 150.0
 _jumpTime = 0.1
+_wallFriction = 300.0
+_wallJumpStrength = 150.0
+_wallJumpAngle = 55.0
 
 [node name="Gun" type="Node2D" parent="." unique_id=590104627 node_paths=PackedStringArray("_kinematicOwner")]
 position = Vector2(0, -16)

@@ -8,6 +8,7 @@ namespace CraterSprite
 		public const float GravityConstant = 32.0f * 9.8f;
 		public const float DefaultMaxFallSpeed = 1000.0f;
 
+		// MOVEMENT
 		[ExportGroup("Movement")]
 		[Export(PropertyHint.None, "suffix:px/s\\u00b2")]
 		private float _acceleration = 50.0f;
@@ -18,8 +19,13 @@ namespace CraterSprite
 		[Export(PropertyHint.None, "suffix:px/s")]
 		private float _crouchedMaxSpeed = 5.0f;
 
+		[Export(PropertyHint.None, "suffix:px/s\\u00b2")]
+		private float _friction = 50.0f;
+		
 		[Export] private bool _isCrouched = false;
 		
+		
+		// AERIAL
 		[ExportGroup("Aerial")]
 		[Export(PropertyHint.None, "suffix:px/s")]
 		private float _maxAirSpeedHorizontal = 10.0f;
@@ -33,6 +39,7 @@ namespace CraterSprite
 		private float _gravity = 1.0f;
 		
 		
+		// JUMPING
 		[ExportGroup("Jumping")]
 		[Export(PropertyHint.None, "suffix:px/s")]
 		private float _jumpStrength = 100.0f;
@@ -46,6 +53,22 @@ namespace CraterSprite
 		
 		[Export(PropertyHint.Range, "0,5,suffix:s")]
 		private float _coyoteTime = 0.5f;
+		
+		// WALL SLIDING
+		[ExportGroup("Wall Sliding")]
+		[Export(PropertyHint.None, "suffix:px/s")]
+		private float _maxWallSlideSpeed = 50.0f;
+		
+		[Export(PropertyHint.None, "suffix:px/s\\u00b2")]
+		private float _wallFriction = 50.0f;
+
+		[Export(PropertyHint.None, "suffix:px/s")]
+		private float _wallJumpStrength = 100.0f;
+
+		[Export(PropertyHint.Range, "0,90,1,suffix:\\u00b0")]
+		private float _wallJumpAngle = 80.0f;
+
+		[Export] private bool _restoreJumpOnHitWall = true; 
 
 		[Signal] public delegate void MoveSpeedChangedEventHandler(float moveSpeed);
 		[Signal] public delegate void OnCrouchedEventHandler();
@@ -95,7 +118,7 @@ namespace CraterSprite
 			var currentVelocity = Velocity;
 			if (_moveInput == 0.0f)
 			{
-				currentVelocity.X = CraterMath.MoveTo(currentVelocity.X, 0.0f, GetAcceleration() * (float)delta);
+				currentVelocity.X = CraterMath.MoveTo(currentVelocity.X, 0.0f, GetFriction() * (float)delta);
 			}
 			// If the character is not moving at max speed
 			else if (Math.Abs(currentVelocity.X) < GetMaxHorizontalSpeed())
@@ -121,21 +144,28 @@ namespace CraterSprite
 			{
 				currentVelocity.Y = Math.Min(-_jumpStrength, currentVelocity.Y);
 			}
-			else if (!IsOnFloor())
+			else if (!IsOnFloor() && !IsOnWall())
 			{
 				currentVelocity.Y += GravityConstant * _gravity * (float)delta;
 			}
 			
 			var maxSpeed = GetMaxHorizontalSpeed();
-			currentVelocity.X = CraterMath.ClampTowards(currentVelocity.X, -maxSpeed, maxSpeed, GetAcceleration() * (float) delta);
+			currentVelocity.X = CraterMath.ClampTowards(currentVelocity.X, -maxSpeed, maxSpeed, GetFriction() * (float) delta);
 			if (IsOnFloor())
 			{
 				currentVelocity.Y = Math.Clamp(currentVelocity.Y, -_maxAirSpeedVertical, _maxAirSpeedVertical);
+			}
+			else if (IsOnWall())
+			{
+				currentVelocity.Y = CraterMath.MoveTo(currentVelocity.Y, _maxWallSlideSpeed,
+					_wallFriction * (float)delta);
 			}
 			
 			SetVelocity(currentVelocity);
 
 			var onFloorBeforeMove = IsOnFloor();
+			var onWallBeforeMove = IsOnWall();
+			
 			MoveAndSlide();
 			if (IsOnFloor() && !onFloorBeforeMove)
 			{
@@ -144,6 +174,11 @@ namespace CraterSprite
 			else if (!IsOnFloor() && onFloorBeforeMove)
 			{
 				LeavePlatform();
+			}
+
+			if (IsOnWallOnly() && !onWallBeforeMove)
+			{
+				HitWall();
 			}
 			
 			QueueRedraw();
@@ -168,13 +203,33 @@ namespace CraterSprite
 			}
 		}
 
+		private void HitWall()
+		{
+			if (_restoreJumpOnHitWall)
+			{
+				_numJumpsRemaining = Math.Max(_numJumpsRemaining, 1);
+			}
+		}
+
 		public void StartJumping()
 		{
-			if (!CanJump())
+			if (IsOnWallOnly())
 			{
-				return;
+				WallJump();
 			}
-			
+			else if (CanJump())
+			{
+				Jump();
+			}
+		}
+
+		public void StopJumping()
+		{
+			_isJumping = false;
+		}
+
+		private void Jump()
+		{
 			_coyoteTimer.Stop();
 			
 			_isJumping = true;
@@ -183,9 +238,11 @@ namespace CraterSprite
 			--_numJumpsRemaining;
 		}
 
-		public void StopJumping()
+		private void WallJump()
 		{
-			_isJumping = false;
+			var wallJumpVelocity = CalculateJumpVector() * _wallJumpStrength;
+			wallJumpVelocity.X *= Math.Sign(GetWallNormal().X);
+			Velocity = wallJumpVelocity;
 		}
 
 		public void Crouch()
@@ -215,6 +272,18 @@ namespace CraterSprite
 		private float GetAcceleration()
 		{
 			return IsOnFloor() ? _acceleration : _acceleration * _airControlFactor;
+		}
+
+		private float GetFriction()
+		{
+			return IsOnFloor() ? _friction : _friction * _airControlFactor;
+		}
+
+		private Vector2 CalculateJumpVector()
+		{
+			// godot uses -y up for *reasons*, so invert the angle
+			var rads = Mathf.DegToRad(-_wallJumpAngle);
+			return new Vector2(Mathf.Cos(rads), Mathf.Sin(rads));
 		}
 	}
 }
