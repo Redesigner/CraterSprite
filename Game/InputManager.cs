@@ -106,7 +106,7 @@ namespace CraterSprite
         private void RemoveCallback(string actionName, InputEventType type, Action<float> callback)
         {
             GetMapForKeyType(type).RemoveCallback(actionName, callback);
-            GD.Print("Unregistered callback");
+            GD.Print($"Unregistered '{type}' callback from action '{actionName}'");
         }
 
         private SparseEventMap<string, float> GetMapForKeyType(InputEventType type)

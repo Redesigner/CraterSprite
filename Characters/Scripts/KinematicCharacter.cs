@@ -7,6 +7,7 @@ namespace CraterSprite
 	{
 		public const float GravityConstant = 32.0f * 9.8f;
 		public const float DefaultMaxFallSpeed = 1000.0f;
+		public const float NegativeKillY = 1000.0f;
 
 		// MOVEMENT
 		[ExportGroup("Movement")]
@@ -76,7 +77,7 @@ namespace CraterSprite
 
 		[Signal] public delegate void OnClickedEventHandler();
 		
-		private float _moveInput;
+		public float moveInput { get; private set; }
 		private bool _isJumping;
 		private Timer _jumpTimer = new();
 		private Timer _coyoteTimer = new();
@@ -104,19 +105,19 @@ namespace CraterSprite
 
 		public void SetMoveInput(float input)
 		{
-			_moveInput = Math.Clamp(input, -1.0f, 1.0f);
+			moveInput = Math.Clamp(input, -1.0f, 1.0f);
 
 			if (input == 0.0f)
 			{
 				return;
 			}
-			EmitSignalMoveSpeedChanged(_moveInput);
+			EmitSignalMoveSpeedChanged(moveInput);
 		}
 
 		public override void _PhysicsProcess(double delta)
 		{
 			var currentVelocity = Velocity;
-			if (_moveInput == 0.0f)
+			if (moveInput == 0.0f)
 			{
 				currentVelocity.X = CraterMath.MoveTo(currentVelocity.X, 0.0f, GetFriction() * (float)delta);
 			}
@@ -124,7 +125,7 @@ namespace CraterSprite
 			else if (Math.Abs(currentVelocity.X) < GetMaxHorizontalSpeed())
 			{
 				// Don't allow the input based acceleration to push character beyond the max speed
-				var newHorizontalSpeed = currentVelocity.X + _moveInput * GetAcceleration() * (float)delta;
+				var newHorizontalSpeed = currentVelocity.X + moveInput * GetAcceleration() * (float)delta;
 				if (Math.Abs(newHorizontalSpeed) > GetMaxHorizontalSpeed())
 				{
 					currentVelocity.X = GetMaxHorizontalSpeed() * Math.Sign(currentVelocity.X);
@@ -135,9 +136,9 @@ namespace CraterSprite
 				}
 			}
 			// character is trying to push back, let them influence acceleration
-			else if (Math.Sign(currentVelocity.X) != Math.Sign(_moveInput))
+			else if (Math.Sign(currentVelocity.X) != Math.Sign(moveInput))
 			{
-				currentVelocity.X += _moveInput * GetAcceleration() * (float)delta;
+				currentVelocity.X += moveInput * GetAcceleration() * (float)delta;
 			}
 
 			if (_isJumping)
@@ -180,7 +181,11 @@ namespace CraterSprite
 			{
 				HitWall();
 			}
-			
+
+			if (GlobalPosition.Y > NegativeKillY)
+			{
+				QueueFree();
+			}
 			QueueRedraw();
 		}
 

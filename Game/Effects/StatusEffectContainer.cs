@@ -115,16 +115,18 @@ public class StatusEffectContainer
         return !_statusEffects.TryGetValue(effect, out var effectList) ? 0.0f : effectList.Accumulate();
     }
 
-    public void AddBaseValue(StatusEffect effect, float delta)
+    public float AddBaseValue(StatusEffect effect, float delta)
     {
         if (_statusEffects.TryGetValue(effect, out var effectList))
         {
             effectList.baseValue += delta;
-            _onStatusEffectStacksChangedMap.TriggerEvent(effect, effectList.count, effectList.Accumulate());
-            return;
+            var newValue = effectList.Accumulate();
+            _onStatusEffectStacksChangedMap.TriggerEvent(effect, effectList.count, newValue);
+            return newValue;
         }
         
         SetBaseValue(effect, delta);
+        return delta;
     }
 
     public Dictionary<StatusEffect, StatusEntry>.Enumerator GetEnumerator()

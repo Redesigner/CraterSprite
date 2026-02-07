@@ -21,11 +21,17 @@ public partial class ProjectileLauncher : Node2D
     }
     private Vector2 _facingDirection;
 
+    public bool aimingUp = false;
+    
     private CharacterStats _characterStats;
 
     public override void _Ready()
     {
         _characterStats = CraterFunctions.GetNodeByClassFromRoot<CharacterStats>(this);
+        if (_kinematicOwner != null)
+        {
+            _kinematicOwner.MoveSpeedChanged += speed => { _facingDirection.X = Mathf.Sign(speed); };
+        }
     }
 
     public override void _Draw()
@@ -40,14 +46,14 @@ public partial class ProjectileLauncher : Node2D
 
     public void FireProjectile()
     {
-        var projectile = CraterFunctions.CreateInstance<Projectile>(this, _projectile, GlobalPosition + _facingDirection * _offset);
+        var projectile = CraterFunctions.CreateInstance<Projectile>(this, _projectile, GlobalPosition + GetFacingDirection() * _offset);
         if (projectile == null)
         {
             return;
         }
 
         projectile.SetOwner(_characterStats);
-        projectile.velocity = _facingDirection * _projectileSpeed;
+        projectile.velocity =  GetFacingDirection() * _projectileSpeed;
         projectile.velocity.X += _kinematicOwner?.Velocity.X ?? 0.0f;
     }
 
@@ -59,5 +65,10 @@ public partial class ProjectileLauncher : Node2D
         }
 
         _facingDirection.X = Math.Sign(x);
+    }
+
+    private Vector2 GetFacingDirection()
+    {
+        return aimingUp ? Vector2.Up : _facingDirection;
     }
 }

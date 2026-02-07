@@ -22,6 +22,8 @@ public partial class CharacterStats : Node
     private readonly StatusEffectContainer _effects = new();
 
     [Export] private bool _showingStats = false;
+    
+    [Signal] public delegate void OnDeathEventHandler();
 
     public override void _Ready()
     {
@@ -47,7 +49,11 @@ public partial class CharacterStats : Node
     public void TakeDamage(float damageAmount)
     {
         var healthEffect = GameMode.instance.statusEffects.health;
-        _effects.AddBaseValue(healthEffect, -damageAmount);
+        if (_effects.AddBaseValue(healthEffect, -damageAmount) <= 0.0f)
+        {
+            EmitSignalOnDeath();
+            Owner?.QueueFree();
+        }
     }
 
     private void DrawImGui()
