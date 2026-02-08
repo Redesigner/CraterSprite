@@ -2,8 +2,10 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace CraterSprite
+namespace CraterSprite.Input
 {
+    using InputVariant = Variant<Key, JoyAxis, JoyButton>;
+
     public enum InputEventType
     {
         None,
@@ -28,9 +30,8 @@ namespace CraterSprite
         private readonly SparseEventMap<Tuple<string, int>, float> _keyChangedEventMap = new();
         private readonly SparseEventMap<Tuple<InputAxis1D, int>, float> _axisChangedEventMap = new();
 
-        private readonly Dictionary<Key, string> _keyActionMap = new();
-        private readonly Dictionary<JoyAxis, string> _gamepadAxisMap = new();
-        private readonly Dictionary<JoyButton, string> _gamepadButtonMap = new();
+        // Map our keys to action strings
+        private readonly Dictionary<InputVariant, string> _keyActionMap = new();
 
         private readonly Dictionary<Tuple<string, int>, float> _actionDeviceValueMap = new();
 
@@ -51,11 +52,11 @@ namespace CraterSprite
                     switch (inputEvent)
                     {
                         case InputEventJoypadButton joypadEvent:
-                            _gamepadButtonMap.Add(joypadEvent.ButtonIndex, action);
+                            _keyActionMap.Add(joypadEvent.ButtonIndex, action);
                             continue;
                         
                         case InputEventJoypadMotion joypadMotion:
-                            _gamepadAxisMap[joypadMotion.Axis] = action;
+                            _keyActionMap[joypadMotion.Axis] = action;
                             continue;
                         
                         case InputEventKey key:
@@ -193,7 +194,7 @@ namespace CraterSprite
             {
                 case InputEventJoypadButton joypadEvent:
                     strength = joypadEvent.Pressed ? 1.0f : 0.0f;
-                    return _gamepadButtonMap.TryGetValue(joypadEvent.ButtonIndex, out action);
+                    return _keyActionMap.TryGetValue(joypadEvent.ButtonIndex, out action);
                         
                 case InputEventJoypadMotion joypadMotion:
                     strength = joypadMotion.AxisValue;
@@ -201,7 +202,7 @@ namespace CraterSprite
                     {
                         strength = 0.0f;
                     }
-                    return _gamepadAxisMap.TryGetValue(joypadMotion.Axis, out action);
+                    return _keyActionMap.TryGetValue(joypadMotion.Axis, out action);
                         
                 case InputEventKey key:
                     strength = key.Pressed ? 1.0f : 0.0f;
