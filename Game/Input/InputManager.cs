@@ -33,6 +33,7 @@ namespace CraterSprite.Input
         public override void _Ready()
         {
             instance = this;
+            var actionCount = 0;
             // Steal godot's existing action editor, so I don't have to write one
             foreach (var action in InputMap.GetActions())
             {
@@ -40,13 +41,16 @@ namespace CraterSprite.Input
                 {
                     continue;
                 }
-                
+
+                ++actionCount;
                 foreach (var inputEvent in InputMap.ActionGetEvents(action))
                 {
                     var inputVariant = GetInputVariantFromEvent(inputEvent);
                     _keyActionMap.Add(inputVariant, AddAccumulator(inputVariant, action));
                 }
             }
+            
+            GD.Print($"[Input Manager] Parsed {_actions.Count} unique actions from {actionCount} in the action map.");
         }
 
         public override void _Input(InputEvent @event)

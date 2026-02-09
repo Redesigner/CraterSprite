@@ -26,7 +26,6 @@ public class InputDevice
     public void HandleInput(InputVariant input, InputEventType inputEventType, InputAction action, float strength)
     {
         _deviceValueMap[input] = strength;
-        GD.Print($"Action '{action.name}' Accumulated input strength '{Accumulate(action)}");
         var newStrength = Accumulate(action);
                 
         if (inputEventType is InputEventType.Pressed or InputEventType.Released)
