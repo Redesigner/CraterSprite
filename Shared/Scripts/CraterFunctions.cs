@@ -33,6 +33,21 @@ public static class CraterFunctions
         return root == null ? null : GetNodeByClass<T>(root);
     }
 
+    public static T FindNodeByClass<T>(Node root)
+        where T : Node
+    {
+        var nodesToSearch = root.GetChildren();
+        foreach (var node in nodesToSearch)
+        {
+            if (node is T typedNode)
+            {
+                return typedNode;
+            }
+            nodesToSearch.AddRange(node.GetChildren());
+        }
+        return null;
+    }
+
     public static T CreateInstance<T>(Node rootContext, PackedScene prefab, Vector2 position)
         where T : Node2D
     {

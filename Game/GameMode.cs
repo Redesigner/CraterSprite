@@ -18,6 +18,7 @@ public partial class GameMode : Node
     public Match3RecipeTable recipes { get; private set; }
 
     private List<SpawnLocation> _locations = [];
+    public List<Node2D> players = [];
     
     // Serialized settings, because this is a singleton
     private GameModeSettings _settings;
@@ -47,11 +48,11 @@ public partial class GameMode : Node
 
         _settings = ResourceLoader.Load<GameModeSettings>("res://Game/DefaultSettings.tres");
         SpawnPlayers();
+        
     }
 
     public void AddSpawnLocation(SpawnLocation location)
     {
-        GD.Print("Loading spawn location");
         _locations.Insert((int)location.defaultIndex, location);
     }
 
@@ -62,8 +63,14 @@ public partial class GameMode : Node
         {
             GD.Print($"[GameMode] Spawning player {i}...");
             var chosenSpawnIndex = GD.RandRange(0, remainingSpawnLocations.Count - 1);
-            CraterFunctions.CreateInstanceDeferred<Node2D>(this, _settings.player, remainingSpawnLocations[chosenSpawnIndex].GlobalPosition);
+            var spawnLocation = remainingSpawnLocations[chosenSpawnIndex];
+            var playerInstance = _settings.player.Instantiate<Node2D>();
+            playerInstance.SetGlobalPosition(spawnLocation.GlobalPosition);
+            spawnLocation.Owner.AddChild(playerInstance);
             remainingSpawnLocations.RemoveAt(chosenSpawnIndex);
+            
+            players.Add(playerInstance);
+            CraterFunctions.GetNodeByClass<PlayerController>(playerInstance)?.BindInput(i);
         }
     }
 }

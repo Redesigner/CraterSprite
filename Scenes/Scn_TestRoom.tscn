@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://dbsjfkw53mpjv" path="res://Game/SpawnLocation.cs" id="5_fcfrf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l2rra"]
-size = Vector2(320, 32)
+size = Vector2(1024, 32)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5ui78"]
 shader = ExtResource("2_5w25o")
@@ -31,12 +31,12 @@ shape = SubResource("RectangleShape2D_l2rra")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Floor" unique_id=81709436]
 texture_repeat = 2
 material = SubResource("ShaderMaterial_5ui78")
-scale = Vector2(320, 32)
+scale = Vector2(1024, 32)
 mesh = SubResource("QuadMesh_2lscm")
 texture = ExtResource("2_l2rra")
 
 [node name="Wall" type="StaticBody2D" parent="." unique_id=1431298936]
-position = Vector2(336, 272)
+position = Vector2(336, 240)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall" unique_id=983092068]
 shape = SubResource("RectangleShape2D_20dgb")
@@ -49,7 +49,7 @@ mesh = SubResource("QuadMesh_2yfc4")
 texture = ExtResource("4_fcfrf")
 
 [node name="Wall2" type="StaticBody2D" parent="." unique_id=1312921766]
-position = Vector2(688, 272)
+position = Vector2(688, 240)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall2" unique_id=273760901]
 shape = SubResource("RectangleShape2D_20dgb")
