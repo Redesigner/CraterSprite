@@ -17,8 +17,10 @@ public partial class GameMode : Node
     
     public Match3RecipeTable recipes { get; private set; }
 
-    private List<SpawnLocation> _locations = [];
-    public List<Node2D> players = [];
+    private readonly List<SpawnLocation> _locations = [];
+    public readonly List<Node2D> players = [];
+    
+    public Node worldRoot { get; private set; }
     
     // Serialized settings, because this is a singleton
     private GameModeSettings _settings;
@@ -48,7 +50,8 @@ public partial class GameMode : Node
 
         _settings = ResourceLoader.Load<GameModeSettings>("res://Game/DefaultSettings.tres");
         SpawnPlayers();
-        
+
+        worldRoot = _locations[0].Owner;
     }
 
     public void AddSpawnLocation(SpawnLocation location)

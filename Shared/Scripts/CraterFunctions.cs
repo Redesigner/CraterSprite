@@ -57,7 +57,8 @@ public static class CraterFunctions
         }
 
         var newInstance = prefab.Instantiate<T>();
-        rootContext.GetTree().GetRoot().AddChild(newInstance);
+        // rootContext.GetTree().GetRoot().AddChild(newInstance);
+        GameMode.instance.worldRoot.AddChild(newInstance);
         newInstance.SetGlobalPosition(position);
         return newInstance;
     }

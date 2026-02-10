@@ -28,8 +28,10 @@ namespace CraterSprite.Input
 
         // Map our keys to action strings
         private readonly Dictionary<InputVariant, InputAction> _keyActionMap = new();
-        public readonly List<InputAction> _actions = new();
+        public readonly List<InputAction> _actions = [];
         private readonly List<InputDevice> _devices = [new(), new()];
+
+        private bool _showDebug = false;
 
         public override void _Ready()
         {
@@ -197,8 +199,18 @@ namespace CraterSprite.Input
             return action;
         }
 
+        public void ToggleDebug()
+        {
+            _showDebug = !_showDebug;
+        }
+
         public override void _Process(double delta)
         {
+            if (!_showDebug)
+            {
+                return;
+            }
+            
             // Preprocessor guards aren't working right now
 // #if IMGUI
             for (var i = 0; i < _devices.Count; ++i)

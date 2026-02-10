@@ -25,6 +25,8 @@ namespace CraterSprite
             InputManager.instance.RegisterCallback("fire", InputEventType.Pressed, _ => _gun.FireProjectile(), deviceIndex, this);
             InputManager.instance.RegisterCallback("aim_up", InputEventType.Pressed, _ => _gun.aimingUp = true, deviceIndex, this);
             InputManager.instance.RegisterCallback("aim_up", InputEventType.Released, _ => _gun.aimingUp = false, deviceIndex, this);
+            
+            InputManager.instance.RegisterCallback("input_debug_toggle", InputEventType.Pressed, _ => InputManager.instance.ToggleDebug(), deviceIndex, this);
         }
     }
 }
