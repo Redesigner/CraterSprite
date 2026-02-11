@@ -21,7 +21,7 @@ public partial class CharacterStats : Node
 {
     private readonly StatusEffectContainer _effects = new();
 
-    [Export] private bool _showingStats = false;
+    [Export] private bool _showingStats;
     
     [Signal] public delegate void OnDeathEventHandler();
 
@@ -46,14 +46,22 @@ public partial class CharacterStats : Node
         _showingStats = !_showingStats;
     }
 
+    /**
+     * <summary>
+     * Take damage. Automatically emits events associated with the health effect,
+     * and triggers the OnDeath signal if the damage causes this character to die
+     * </summary>
+     */
     public void TakeDamage(float damageAmount)
     {
         var healthEffect = GameMode.instance.statusEffects.health;
-        if (_effects.AddBaseValue(healthEffect, -damageAmount) <= 0.0f)
+        if (!(_effects.AddBaseValue(healthEffect, -damageAmount) <= 0.0f))
         {
-            EmitSignalOnDeath();
-            Owner?.QueueFree();
+            return;
         }
+        
+        EmitSignalOnDeath();
+        Owner?.QueueFree();
     }
 
     private void DrawImGui()
