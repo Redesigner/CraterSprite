@@ -101,6 +101,8 @@ public partial class KinematicCharacter : CharacterBody2D
 	[Signal] public delegate void OnUncrouchedEventHandler();
 
 	[Signal] public delegate void OnClickedEventHandler();
+
+	public CraterEvent onHitFloor = new();
 	
 	public float moveInput { get; private set; }
 	private bool _isJumping;
@@ -291,6 +293,7 @@ public partial class KinematicCharacter : CharacterBody2D
 	{
 		_numJumpsRemaining = _numJumps;
 		_coyoteTimer.Stop();
+		onHitFloor.Invoke();
 	}
 
 	private void LeavePlatform()

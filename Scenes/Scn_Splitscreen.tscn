@@ -40,7 +40,7 @@ render_target_update_mode = 4
 
 [node name="LeftPlayerCamera" type="Camera2D" parent="HBoxContainer/LeftScreen/LeftViewport" unique_id=716403420]
 offset = Vector2(0, -8)
-zoom = Vector2(4, 4)
+zoom = Vector2(2, 2)
 limit_enabled = false
 position_smoothing_enabled = true
 script = ExtResource("2_87bac")
@@ -66,7 +66,7 @@ render_target_update_mode = 4
 
 [node name="RightPlayerCamera" type="Camera2D" parent="HBoxContainer/RightScreen/RightViewport" unique_id=2029577569]
 offset = Vector2(0, -8)
-zoom = Vector2(4, 4)
+zoom = Vector2(2, 2)
 limit_enabled = false
 position_smoothing_enabled = true
 script = ExtResource("2_87bac")
