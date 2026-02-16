@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://c74blvexl5qt5" path="res://Characters/Scripts/CharacterAnimationTree.cs" id="5_7kb7x"]
 [ext_resource type="Script" uid="uid://u3cmil3kdff0" path="res://Characters/Players/Scripts/PlayerState.cs" id="9_570sx"]
 [ext_resource type="Script" uid="uid://c6kd0fuula6g3" path="res://Characters/Players/Scripts/PlayerCameraAttachmentPoint.cs" id="10_vv1l6"]
+[ext_resource type="Script" uid="uid://5yfgyni1c342" path="res://Shared/Scripts/DamageZone2D.cs" id="11_7id01"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1fpnh"]
 size = Vector2(14, 20)
@@ -101,6 +102,9 @@ _data = {
 &"walkRight": SubResource("Animation_ybv78")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ebcvw"]
+size = Vector2(192, 20)
+
 [node name="Player" type="CharacterBody2D" unique_id=2076774000]
 z_index = 1
 collision_layer = 4
@@ -174,6 +178,18 @@ characterTeam = 1
 
 [node name="CameraAttach" type="RemoteTransform2D" parent="." unique_id=1538334504]
 script = ExtResource("10_vv1l6")
+
+[node name="CameraKillZone" type="Area2D" parent="CameraAttach" unique_id=716764710]
+collision_layer = 8
+collision_mask = 16
+script = ExtResource("11_7id01")
+_filter = 3
+_damage = 99.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CameraAttach/CameraKillZone" unique_id=1671477932]
+position = Vector2(0, 96)
+shape = SubResource("RectangleShape2D_ebcvw")
+debug_color = Color(0.9470236, 3.5616756e-06, 0.5873681, 0.41960785)
 
 [connection signal="MoveSpeedChanged" from="." to="AnimationTree" method="SetWalkSpeed"]
 [connection signal="OnClicked" from="." to="PlayerStats" method="ToggleShowStats"]

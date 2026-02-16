@@ -21,6 +21,8 @@ public partial class GameMode : Node
     public readonly List<Node2D> players = [];
     
     public Node worldRoot { get; private set; }
+
+    public CraterEvent<int, Node2D> onPlayerSpawned = new ();
     
     // Serialized settings, because this is a singleton
     private GameModeSettings _settings;
@@ -74,6 +76,8 @@ public partial class GameMode : Node
             
             players.Add(playerInstance);
             CraterFunctions.GetNodeByClass<PlayerController>(playerInstance)?.BindInput(i);
+
+            onPlayerSpawned.Invoke(i, playerInstance);
         }
     }
 }

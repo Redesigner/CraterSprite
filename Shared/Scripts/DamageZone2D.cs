@@ -26,6 +26,11 @@ public partial class DamageZone2D : Area2D
         {
             return;
         }
+
+        if (_owner != null && _owner == characterStats)
+        {
+            return;
+        }
         
         characterStats.TakeDamage(_damage);
     }

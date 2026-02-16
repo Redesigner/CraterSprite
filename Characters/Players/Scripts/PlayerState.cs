@@ -13,4 +13,10 @@ public partial class PlayerState : CharacterStats
     private float _superMoveCharge;
     
     [Export] private float _maxSuperMoveCharge;
+    public readonly Match3Container container = new();
+
+    public override void KilledEnemy(CharacterStats enemy)
+    {
+        container.AddOrb(enemy.matchType);
+    }
 }

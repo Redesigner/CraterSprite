@@ -55,7 +55,8 @@ public partial class Projectile : Node2D
 
     private void HitEnemy(CharacterStats character)
     {
-        character.TakeDamage(1.0f);
+        var obj = InstanceFromId(_owner.ObjectId);
+        character.TakeDamage(1.0f, (CharacterStats)obj);
 
         if (_destroyOnContact)
         {

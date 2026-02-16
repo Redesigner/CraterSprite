@@ -1,7 +1,7 @@
-using Godot;
-using System;
 using CraterSprite.Effects;
+using CraterSprite.Match3;
 using CraterSprite.Teams;
+using Godot;
 using ImGuiNET;
 
 namespace CraterSprite;
@@ -11,19 +11,22 @@ namespace CraterSprite;
  */
 public partial class CharacterStats : Node
 {
-    [Export] private bool _showingStats;
 
-    [Export] public Team characterTeam { private set; get; }
-    
     [Signal] public delegate void OnDeathEventHandler();
 
     private readonly StatusEffectContainer _effects = new();
-    
+    [Export] private bool _showingStats;
+
+    [Export] public Team characterTeam { private set; get; }
+
+    [Export] public MatchType matchType { private set; get; }
+
+    [Export] private float _defaultHealth = 15;
     
     public override void _Ready()
     {
-        _effects.SetBaseValue(GameMode.instance.statusEffects.health, 15);
-        _effects.SetBaseValue(GameMode.instance.statusEffects.maxHealth, 15);
+        _effects.SetBaseValue(GameMode.instance.statusEffects.health, _defaultHealth);
+        _effects.SetBaseValue(GameMode.instance.statusEffects.maxHealth, _defaultHealth);
     }
 
     public override void _Process(double delta)
@@ -43,8 +46,8 @@ public partial class CharacterStats : Node
 
     /**
      * <summary>
-     * Take damage. Automatically emits events associated with the health effect,
-     * and triggers the OnDeath signal if the damage causes this character to die
+     *     Take damage. Automatically emits events associated with the health effect,
+     *     and triggers the OnDeath signal if the damage causes this character to die
      * </summary>
      */
     public void TakeDamage(float damageAmount, CharacterStats source = null)
@@ -54,9 +57,16 @@ public partial class CharacterStats : Node
         {
             return;
         }
-        
-        EmitSignalOnDeath();
+
+        GD.Print($"Character '{Owner.Name}' died.");
+
+        source?.KilledEnemy(this);
         Owner?.QueueFree();
+        EmitSignalOnDeath();
+    }
+
+    public virtual void KilledEnemy(CharacterStats enemy)
+    {
     }
 
     private void DrawImGui()
@@ -87,7 +97,7 @@ public partial class CharacterStats : Node
 
                 foreach (var instance in item.Value)
                 {
-                    var content = $"Source:";
+                    var content = "Source:";
                     if (instance.duration != 0.0f)
                     {
                         content += $"\tTime: {instance.currentTime}/{instance.duration}s";
