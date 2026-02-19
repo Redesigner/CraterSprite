@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace CraterSprite;
@@ -19,6 +20,12 @@ public static class CraterFunctions
         return null;
     }
 
+    public static List<T> GetAllNodesByClass<T>(Node parent)
+        where T : Node
+    {
+        return parent == null ? [] : parent.GetChildren().OfType<T>().ToList();
+    }
+
     public static T GetNodeByClassFromParent<T>(Node self)
         where T : Node
     {
@@ -37,8 +44,9 @@ public static class CraterFunctions
         where T : Node
     {
         var nodesToSearch = root.GetChildren();
-        foreach (var node in nodesToSearch)
+        for (var i = 0; i < nodesToSearch.Count; ++i)
         {
+            var node = nodesToSearch[i];
             if (node is T typedNode)
             {
                 return typedNode;
@@ -72,7 +80,7 @@ public static class CraterFunctions
         }
 
         var newInstance = prefab.Instantiate<T>();
-        rootContext.GetTree().GetRoot().CallDeferred("add_child", newInstance);
+        GameMode.instance.worldRoot.CallDeferred("add_child", newInstance);
         newInstance.SetGlobalPosition(position);
         return newInstance;
     }

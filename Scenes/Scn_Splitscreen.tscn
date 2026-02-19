@@ -53,11 +53,14 @@ custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="HBoxContainer" type="VBoxContainer" parent="HBoxContainer/ColorRect" unique_id=226962404]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/ColorRect" unique_id=539872155]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 32.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -34.0
+offset_right = 34.0
+offset_bottom = 128.0
 grow_horizontal = 2
 
 [node name="Match3Display" parent="HBoxContainer/ColorRect/HBoxContainer" unique_id=1242715241 instance=ExtResource("4_h0bj7")]

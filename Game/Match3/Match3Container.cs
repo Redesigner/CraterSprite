@@ -8,7 +8,10 @@ public class Match3Container
 {
     public readonly List<MatchType> orbs = [];
 
-    public CraterEvent<List<MatchType>> onOrbsChanged = new();
+    public readonly CraterEvent<List<MatchType>> onOrbsChanged = [];
+
+    public readonly CraterEvent<MatchType> onSpawnSingleRequested = [];
+    public readonly CraterEvent<List<MatchType>> onSpawnRequested = [];
 
     public void AddOrb(MatchType matchType)
     {
@@ -33,7 +36,12 @@ public class Match3Container
         {
             // Notify spawn manager
             GD.Print("Could not spawn anything with this combination.");
-            orbs.Clear();
+
+            for (var i = 0; i < orbs.Count - 1; ++i)
+            {
+                onSpawnSingleRequested.Invoke(orbs[i]);
+            }
+            orbs.RemoveRange(0, orbs.Count - 1);
         }
         
         onOrbsChanged.Invoke(orbs);

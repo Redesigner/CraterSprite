@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using CraterSprite.Game.Match3;
+using Godot;
 
 namespace CraterSprite;
 
@@ -13,7 +14,21 @@ public partial class PlayerState : CharacterStats
     private float _superMoveCharge;
     
     [Export] private float _maxSuperMoveCharge;
+
+    [Export] public Match3Spawner match3Spawner { private set; get; }
+    
     public readonly Match3Container container = new();
+
+    public override void _Ready()
+    {
+        base._Ready();
+
+        match3Spawner = CraterFunctions.FindNodeByClass<Match3Spawner>(GetOwner());
+        if (match3Spawner == null)
+        {
+            GD.PrintErr("[PlayerState] Could not find valid Match3Spawner.");
+        }
+    }
 
     public override void KilledEnemy(CharacterStats enemy)
     {
