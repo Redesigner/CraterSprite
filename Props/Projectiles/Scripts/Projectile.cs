@@ -41,7 +41,7 @@ public partial class Projectile : Node2D
 
     private void Overlap(Area2D area)
     {
-        var hitObjectCharacterStats = CraterFunctions.GetNodeByClassFromRoot<IDamageListener>(area);
+        var hitObjectCharacterStats = CraterFunctions.GetNodeByClassFromParent<IDamageListener>(area);
         if (hitObjectCharacterStats == null)
         {
             return;

@@ -14,9 +14,11 @@ public partial class Gem : Area2D, IDamageListener
 
     public void TakeDamage(float damageAmount, CharacterStats source)
     {
-        if (source is PlayerState playerState && source.Owner is Node2D player)
+        if (source is PlayerState playerState)
         {
-            GameMode.instance.NotifyGemDestroyed(playerState.index, player.GlobalPosition - GlobalPosition);
+            var offset = GlobalPosition - playerState.match3Spawner.GlobalPosition;
+            GameMode.instance.NotifyGemDestroyed(playerState.index, offset);
+            GD.Print($"[Gem] Gem '{Name}' was destroyed by player {playerState.index} with relative position {offset}");
         }
         
         QueueFree();

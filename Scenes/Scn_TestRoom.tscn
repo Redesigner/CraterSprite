@@ -102,8 +102,14 @@ position = Vector2(272, 288)
 [node name="WaterEnemy3" parent="." unique_id=1066074866 instance=ExtResource("6_2yfc4")]
 position = Vector2(240, 288)
 
-[node name="Gem" parent="." unique_id=1587296199 instance=ExtResource("7_2yfc4")]
+[node name="GemLeft" parent="." unique_id=1587296199 instance=ExtResource("7_2yfc4")]
 position = Vector2(176, 224)
 
-[node name="Gem2" parent="." unique_id=150553039 instance=ExtResource("7_2yfc4")]
-position = Vector2(832, 224)
+[node name="GemLeft2" parent="." unique_id=2113938364 instance=ExtResource("7_2yfc4")]
+position = Vector2(80, 288)
+
+[node name="GemRight2" parent="." unique_id=1865302616 instance=ExtResource("7_2yfc4")]
+position = Vector2(656, 288)
+
+[node name="GemRight" parent="." unique_id=150553039 instance=ExtResource("7_2yfc4")]
+position = Vector2(576, 224)
