@@ -8,16 +8,16 @@ public partial class PlayerState : CharacterStats
     [Export] public float score;
     [Export] public float superMoveCharge
     {
-        get => _superMoveCharge;
-        set => _superMoveCharge = Mathf.Clamp(value, 0.0f, _maxSuperMoveCharge);
+        get => _supercharge;
+        set => _supercharge = Mathf.Clamp(value, 0.0f, _maxSupercharge);
     }
-    private float _superMoveCharge;
+    private float _supercharge;
     
-    [Export] private float _maxSuperMoveCharge;
+    [Export] private float _maxSupercharge;
     [Export] public Match3Spawner match3Spawner { private set; get; }
     
     
-    public readonly CraterEvent<float> onSuperChargeChanged = new();
+    public readonly CraterEvent<float, float> onSuperchargeChanged = new();
     
     public readonly Match3Container container = new();
 
@@ -34,6 +34,13 @@ public partial class PlayerState : CharacterStats
         }
     }
 
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        
+        AddSuperCharge((float)delta * 1.0f);
+    }
+
     public override void KilledEnemy(CharacterStats enemy)
     {
         container.AddOrb(enemy.matchType);
@@ -41,8 +48,8 @@ public partial class PlayerState : CharacterStats
 
     public void AddSuperCharge(float chargeAmount)
     {
-        _superMoveCharge += chargeAmount;
-        onSuperChargeChanged.Invoke(_superMoveCharge);
-        GD.Print($"[PlayerState] supercharge increased to '{_superMoveCharge}'");
+        _supercharge += chargeAmount;
+        onSuperchargeChanged.Invoke(_supercharge, _maxSupercharge);
+        // GD.Print($"[PlayerState] supercharge increased to '{_supercharge}'");
     }
 }

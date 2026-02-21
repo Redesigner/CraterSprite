@@ -175,6 +175,7 @@ script = ExtResource("5_7kb7x")
 
 [node name="PlayerStats" type="Node" parent="." unique_id=410689954]
 script = ExtResource("9_570sx")
+_maxSupercharge = 100.0
 _showingStats = true
 characterTeam = 1
 _invulnerabilityTime = 2.0
