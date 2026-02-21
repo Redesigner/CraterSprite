@@ -32,7 +32,7 @@ public partial class Match3Spawner : Node2D
     public void QueueRelativeSpawn(PackedScene spawn, Vector2 offset)
     {
         var newOffset = offset;
-        newOffset.X *= -1.0f;
+        newOffset.X *= 1.0f;
         CraterFunctions.CreateInstance<Node2D>(this, spawn, GlobalPosition + newOffset);
     }
 

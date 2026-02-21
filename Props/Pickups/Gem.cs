@@ -14,10 +14,12 @@ public partial class Gem : Area2D, IDamageListener
 
     public void TakeDamage(float damageAmount, CharacterStats source)
     {
-        if (source is PlayerState playerState)
+        if (source is PlayerState playerState && source.Owner is Node2D player)
         {
-            GameMode.instance.NotifyGemDestroyed(playerState.index);
+            GameMode.instance.NotifyGemDestroyed(playerState.index, player.GlobalPosition - GlobalPosition);
         }
+        
+        QueueFree();
     }
 
     private void Overlap(Area2D area)

@@ -74,9 +74,9 @@ public partial class GameMode : Node
         return null;
     }
 
-    public void NotifyGemDestroyed(int destroyerPlayerIndex)
+    public void NotifyGemDestroyed(int destroyerPlayerIndex, Vector2 offset)
     {
-        
+        _playerStates[GetRivalIndex(destroyerPlayerIndex)].match3Spawner.QueueRelativeSpawn(_settings.gem, offset);
     }
 
     private void SpawnPlayers()
