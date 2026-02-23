@@ -1,8 +1,7 @@
 using Godot;
+using System;
 
-namespace CraterSprite;
-
-public partial class ToggleableHitbox : Area2D
+public partial class Hurtbox : Area2D
 {
 	[Export] private CollisionShape2D _onHitbox;
 	[Export] private CollisionShape2D _offHitbox;
