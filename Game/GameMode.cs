@@ -18,16 +18,30 @@ public partial class GameMode : Node
     
     public Match3RecipeTable recipes { get; private set; }
 
+    
+    // ==== Player objects ====
+    // Possible spawn locations
     private readonly List<SpawnLocation> _locations = [];
+    
+    // Current player objects
     public readonly List<Node2D> players = [];
+    
+    // Current player state objects. These are where the relevant attributes
+    // and other things that persist beyond the player's death go
     private readonly List<PlayerState> _playerStates = [];
     
+    // Because of the weird split-screen setup, objects should refer to this
+    // when they are spawning into the world, rather than using the current
+    // tree root
     public Node worldRoot { get; private set; }
 
-    public CraterEvent<int, Node2D> onPlayerSpawned = new ();
+    // Event for when a player is spawned. UI objects might need to listen for this
+    public readonly CraterEvent<int, Node2D> onPlayerSpawned = new ();
     
     // Serialized settings, because this is a singleton
     private GameModeSettings _settings;
+
+    private float _currentSpawnTime = 5.0f;
 
     public override void _EnterTree()
     {
@@ -58,11 +72,37 @@ public partial class GameMode : Node
         worldRoot = _locations[0].Owner;
     }
 
+    public override void _Process(double delta)
+    {
+        var deltaTime = (float)delta;
+
+        _currentSpawnTime += deltaTime;
+        if (!(_currentSpawnTime > _settings.globalSpawnTime))
+        {
+            return;
+        }
+        
+        _currentSpawnTime -= _settings.globalSpawnTime;
+
+        foreach (var player in _playerStates)
+        {
+            var objectToSpawn = _settings.spawnTable.GetRandomEntry();
+            player.match3Spawner.QueueSpawn(objectToSpawn);
+        }
+    }
+
+    /**
+     * <summary>Register a new potential spawn location for the players</summary>
+     */
     public void AddSpawnLocation(SpawnLocation location)
     {
         _locations.Insert((int)location.defaultIndex, location);
     }
 
+    /**
+     * <summary>Get the player state associated with a specific player index</summary>
+     * <returns>Player state, or null if there is no associated index</returns>
+     */
     public PlayerState GetPlayerState(int playerIndex)
     {
         if (playerIndex >= 0 && playerIndex < _playerStates.Count)
