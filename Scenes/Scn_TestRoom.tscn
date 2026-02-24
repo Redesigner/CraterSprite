@@ -63,18 +63,8 @@ scale = Vector2(1, 4)
 mesh = SubResource("QuadMesh_2yfc4")
 texture = ExtResource("4_fcfrf")
 
-[node name="Wall3" type="StaticBody2D" parent="." unique_id=2057803598]
-position = Vector2(1008, 240)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall3" unique_id=138299161]
-shape = SubResource("RectangleShape2D_20dgb")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Wall3" unique_id=996261425]
-texture_repeat = 2
-material = SubResource("ShaderMaterial_5ui78")
-scale = Vector2(1, 4)
-mesh = SubResource("QuadMesh_2yfc4")
-texture = ExtResource("4_fcfrf")
+[node name="TestEnemy" parent="." unique_id=1547651322 instance=ExtResource("4_5ui78")]
+position = Vector2(434, 229)
 
 [node name="SpawnLocation1" type="Node2D" parent="." unique_id=1783809333]
 position = Vector2(112, 288)
