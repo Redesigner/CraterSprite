@@ -41,8 +41,6 @@ public partial class GameMode : Node
     // Serialized settings, because this is a singleton
     private GameModeSettings _settings;
 
-    private float _currentSpawnTime = 5.0f;
-
     public override void _EnterTree()
     {
         instance = this;
@@ -70,25 +68,6 @@ public partial class GameMode : Node
         SpawnPlayers();
 
         worldRoot = _locations[0].Owner;
-    }
-
-    public override void _Process(double delta)
-    {
-        var deltaTime = (float)delta;
-
-        _currentSpawnTime += deltaTime;
-        if (!(_currentSpawnTime > _settings.globalSpawnTime))
-        {
-            return;
-        }
-        
-        _currentSpawnTime -= _settings.globalSpawnTime;
-
-        foreach (var player in _playerStates)
-        {
-            var objectToSpawn = _settings.spawnTable.GetRandomEntry();
-            player.match3Spawner.QueueSpawn(objectToSpawn);
-        }
     }
 
     /**
