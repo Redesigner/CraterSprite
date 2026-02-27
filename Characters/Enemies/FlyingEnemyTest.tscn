@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://ul4qeudj8sbq"]
+
+[ext_resource type="Script" uid="uid://dtpwycy3o0baf" path="res://Characters/Scripts/KinematicFlyer.cs" id="1_w3jey"]
+[ext_resource type="Texture2D" uid="uid://c765qygv0kp8i" path="res://icon.svg" id="2_06fqe"]
+[ext_resource type="Script" uid="uid://bhiokieshedwe" path="res://Characters/Enemies/AI/FlyingController.cs" id="2_g2wum"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_06fqe"]
+radius = 16.0
+
+[node name="FlyingEnemyTest" type="CharacterBody2D" unique_id=1812670657]
+collision_layer = 4
+script = ExtResource("1_w3jey")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1453853052]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_06fqe")
+
+[node name="KinematicShape" type="CollisionShape2D" parent="." unique_id=328264790]
+shape = SubResource("CircleShape2D_06fqe")
+
+[node name="AIController" type="Node" parent="." unique_id=1030418830 node_paths=PackedStringArray("_character")]
+script = ExtResource("2_g2wum")
+_character = NodePath("..")

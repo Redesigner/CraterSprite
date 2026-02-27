@@ -71,4 +71,26 @@ public abstract class CraterMath
         return new Vector2(MathF.Cos(angle), MathF.Sin(angle));
     }
 
+    public static Vector2 ClampVectorLength(Vector2 vector, float length)
+    {
+        var vectorLengthSquared = vector.LengthSquared();
+        if (vectorLengthSquared > length * length)
+        {
+            return vector * (length / MathF.Sqrt(vectorLengthSquared));
+        }
+        return vector;
+    }
+
+    public static Vector2 ScaleVectorLength(Vector2 vector, float delta)
+    {
+        var length = vector.Length();
+        var normal = vector / length;
+
+        if (-delta > length)
+        {
+            return Vector2.Zero;
+        }
+
+        return normal * (length + delta);
+    }
 }
