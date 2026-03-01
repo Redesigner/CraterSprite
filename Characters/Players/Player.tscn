@@ -194,7 +194,7 @@ _filter = 3
 _damage = 99.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CameraAttach/CameraKillZone" unique_id=1671477932]
-position = Vector2(0, 96)
+position = Vector2(0, 162)
 shape = SubResource("RectangleShape2D_ebcvw")
 debug_color = Color(0.9470236, 3.5616756e-06, 0.5873681, 0.41960785)
 
